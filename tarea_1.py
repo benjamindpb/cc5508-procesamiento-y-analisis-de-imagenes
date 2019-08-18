@@ -3,7 +3,6 @@ from skimage import io
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 parser = argparse.ArgumentParser(description = "CC5508 - Procesamiento y Analisis de Imagenes.Tarea 1: Estenografía")
 group = parser.add_mutually_exclusive_group()
 group.add_argument("--encode", action = "store_true", help = "indica que la tarea es codificar un texto de entrada dentro de una imagen.")
@@ -16,16 +15,24 @@ parser.add_argument("--nbits", nargs = 1, type = int, choices = range(1,9), help
 args = parser.parse_args()
 
 
-#python tarea_1.py --encode --image 'images/gray/lion_gray.jpg' --text 'textos/texto1.txt' --nbits 2
+#python tarea_1.py --encode --image 'images/gray/lenna_gray.png' --text 'textos/texto1.txt' --nbits 2
 if __name__ == '__main__':
+    
+    img_filename = args.image[0]
+    image = io.imread(img_filename)
+    txt_filename = args.text[0]
+    text = open(txt_filename, 'r').read()
+
+    dimension = np.shape(image)
+    filas = dimension[0]
+    columnas = dimension[1]
+
     #modo encode
     if args.encode:
+        
 
         if(8 % args.nbits[0] == 0):
-            img_filename = args.image[0]
-            image = io.imread(img_filename)
-            txt_filename = args.text[0]
-            text = open(txt_filename, 'r').read()
+            
             
             lst_txt = []
             for l in text:
@@ -39,9 +46,7 @@ if __name__ == '__main__':
             for num in txt_ord:
                 txt_bin.append("{0:{fill}8b}".format(num, fill='0'))#convierte a binario
             
-            dimension = np.shape(image)
-            filas = dimension[0]
-            columnas = dimension[1]
+            
             
             #bin_matrix = np.zeros((filas, columnas))#matriz de ceros
 
@@ -72,8 +77,15 @@ if __name__ == '__main__':
                     ini += bits_sigf
                     fin += bits_sigf
 
-            
-            print("\n")
+            """ if(bits_sigf == 1):
+                bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "0001"
+            if(bits_sigf == 2):
+                bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "0010"
+            if(bits_sigf == 4):
+                bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "0100"
+            if(bits_sigf == 8):
+                bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "1000" """
+
             i = 0
             for n in range(filas):
                 for m in range(columnas):
@@ -83,14 +95,25 @@ if __name__ == '__main__':
                         break
                     bin_matrix[n][m] = str(bin_matrix[n][m])[: - bits_sigf] + lst_bits_codif[i]
                     i += 1
-                        
+
+
             #ahora que tenemos la matriz binaria codificada debemos pasar sus valores a int para convertirla en imagen
             for n in range(filas):
                 for m in range(columnas):
                     bin_matrix[n][m] = int(bin_matrix[n][m], 2)
 
-            img = bin_matrix
+            img = bin_matrix.copy()
+            img_numpy = np.array(img, dtype=np.uint8)
 
+            """ print("\nImagen Original: ")
+            print(image)
+            print("\n")
+            print("\nImagen Codificada: ")
+            print(img_numpy)           
+            print("\n") """
+
+            
+            file = io.imsave("img_out/"+img_filename[11:-4]+"_out.png", img_numpy)
             plt.imshow(img, cmap = 'gray')
             plt.show()
 
@@ -99,4 +122,10 @@ if __name__ == '__main__':
     
     #modo decode
     if args.decode:
-        print("DECODE")
+        print("deone")
+        """ if(bin_matrix[filas - 1][columnas - 1])
+        if()
+        if()
+        if() """
+
+        #bits_significativos = image[]
