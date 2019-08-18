@@ -29,11 +29,7 @@ if __name__ == '__main__':
 
     #modo encode
     if args.encode:
-        
-
         if(8 % args.nbits[0] == 0):
-            
-            
             lst_txt = []
             for l in text:
                 lst_txt.append(l)
@@ -46,8 +42,6 @@ if __name__ == '__main__':
             for num in txt_ord:
                 txt_bin.append("{0:{fill}8b}".format(num, fill='0'))#convierte a binario
             
-            
-            
             #bin_matrix = np.zeros((filas, columnas))#matriz de ceros
 
             #creacion de matriz binaria de la imagen original
@@ -59,7 +53,6 @@ if __name__ == '__main__':
                 for m in range(columnas):
                     bin_matrix[n][m] = "{0:{fill}8b}".format(image[n][m], fill='0')
 
-        
             #ahora debemos considerar los bits menos significativos que nos piden
             bits_sigf = args.nbits[0]#se obtienen los bits significativos que se usaran
             txt_bin_copy = txt_bin.copy()
@@ -112,7 +105,6 @@ if __name__ == '__main__':
             print(img_numpy)           
             print("\n") """
 
-            
             file = io.imsave("img_out/"+img_filename[11:-4]+"_out.png", img_numpy)
             plt.imshow(img, cmap = 'gray')
             plt.show()
