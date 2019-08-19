@@ -114,7 +114,7 @@ if __name__ == '__main__':
             
         #imagen a color
         elif(len(image.shape) == 3):
-            print("color")
+            pass
     
     #modo decode
     if args.decode:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
             num_a_codificar=[]
 
             #se extrae el numero de los bits menos significativos
-            bits_signif_bin = "{0:{fill}8b}".format(image[filas - 1][columnas - 1], fill='0')[4:]
+            nbits = int("{0:{fill}8b}".format(image[filas - 1][columnas - 1], fill='0')[4:], 2)
 
             #nro de pixeles que se van a usar
             pixeles = image[filas - 2][columnas - 2]
@@ -140,17 +140,22 @@ if __name__ == '__main__':
                         num_a_codificar.append(image[n][m])
                         n_pix += 1
                 break
-            
 
-            txt_codificado_bin =[]
-            if(bits_signif_bin == '0001'):#1
+            if(nbits == 8):#8
+                decode = ''
+                for elem in num_a_codificar:
+                    caracter = chr(elem)
+                    decode += caracter
+                print(decode)
+
+            else:
+                txt_codificado_bin =[]
                 j = 0
                 i = 0
                 while(i < len(num_a_codificar)):
                     A = ''
-                    while(j < 8 and i < len(num_a_codificar)):
-                        #print(i)
-                        letra_en_binario = "{0:{fill}8b}".format(num_a_codificar[i], fill='0')[-1:]
+                    while(j < int(8 / nbits) and i < len(num_a_codificar)):
+                        letra_en_binario = "{0:{fill}8b}".format(num_a_codificar[i], fill='0')[-nbits:]
                         A += letra_en_binario
                         i += 1
                         j += 1
@@ -162,21 +167,7 @@ if __name__ == '__main__':
                     caracter_num = int(elem, 2)
                     to_char = chr(caracter_num)
                     msj_final += to_char
-                print(msj_final)
-                        
-            if(bits_signif_bin == '0010'):#2
-                print("2")
-
-            if(bits_signif_bin == '0100'):#4
-                print("4")
-
-            if(bits_signif_bin == '1000'):#8
-                decode = ''
-                for elem in num_a_codificar:
-                    caracter = chr(elem)
-                    decode += caracter
-                print(decode)
-            
+                print(msj_final)          
 
         #imagen a color
         elif(len(image.shape) == 3):
