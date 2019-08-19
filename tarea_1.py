@@ -14,8 +14,8 @@ parser.add_argument("--nbits", type = int, help = "indica el numero de bits meno
 
 args = parser.parse_args()
 
-#python tarea_1.py --encode --image 'images/gray/lenna_gray.png' --text 'textos/texto1.txt' --nbits 2
-#python tarea_1.py --decode --image 'img_out/lenna_gray_out.png'
+#python tarea_1.py --encode --image 'images/gray/ten_coins.png' --text 'textos/texto1.txt' --nbits 1
+#python tarea_1.py --decode --image 'img_out/ten_coins_out.png'
 if __name__ == '__main__':
     img_filename = args.image
     image = io.imread(img_filename)
@@ -44,8 +44,6 @@ if __name__ == '__main__':
                 txt_bin = []
                 for num in txt_ord:
                     txt_bin.append("{0:{fill}8b}".format(num, fill='0'))#convierte a binario
-                
-                #bin_matrix = np.zeros((filas, columnas))#matriz de ceros
 
                 #creacion de matriz binaria de la imagen original
                 bin_matrix = [None] * filas
@@ -63,6 +61,7 @@ if __name__ == '__main__':
 
                 cortes = int(8/bits_sigf)#cantidad de divisiones del numero binario
 
+                #esta lista almacenará los substrings
                 lst_bits_codif = []
                 while(txt_bin_copy):
                     num_bin = txt_bin_copy.pop()
@@ -85,18 +84,20 @@ if __name__ == '__main__':
                 if(bits_sigf == 8):
                     bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "1000"
 
-                
+                #modificacion de la matriz de la imagen
                 i = 0
                 for n in range(filas):
                     if(i > len(lst_bits_codif) - 1):
-                            n -= 1
-                            break
+                        break
                     for m in range(columnas): 
                         if(i > len(lst_bits_codif) - 1):
                             break
                         bin_matrix[n][m] = str(bin_matrix[n][m])[: - bits_sigf] + lst_bits_codif[i]
                         i += 1
-                bin_matrix[n][m] = '11111110'    
+                pixeles = len(lst_bits_codif)
+                
+                #se guarda la cantidad de pixeles que se van a usar
+                bin_matrix[filas - 2][columnas - 2] = "{0:{fill}8b}".format(pixeles, fill='0')
                 
                 #ahora que tenemos la matriz binaria codificada debemos pasar sus valores a int para convertirla en imagen
                 for n in range(filas):
@@ -110,10 +111,11 @@ if __name__ == '__main__':
 
             else:
                 print("La cantidad de bits significativos está limitada a solo ser divisores de 8, prueba con {1,2,4,8} lo siento :(")
+            
         #imagen a color
         elif(len(image.shape) == 3):
             print("color")
-
+    
     #modo decode
     if args.decode:
         dimension = np.shape(image)
@@ -123,21 +125,25 @@ if __name__ == '__main__':
         #imagen en escala de grises
         if(len(image.shape) == 2):
             num_a_codificar=[]
+
             #se extrae el numero de los bits menos significativos
             bits_signif_bin = "{0:{fill}8b}".format(image[filas - 1][columnas - 1], fill='0')[4:]
 
+            #nro de pixeles que se van a usar
+            pixeles = image[filas - 2][columnas - 2]
+            n_pix = 0
             for n in range(filas):
                 for m in range(columnas):
-                    if(image[n][m] == 254):
+                    if(n_pix == pixeles):
                         break
                     else:
                         num_a_codificar.append(image[n][m])
+                        n_pix += 1
                 break
-            print(num_a_codificar)
+            
 
             txt_codificado_bin =[]
             if(bits_signif_bin == '0001'):#1
-
                 j = 0
                 i = 0
                 while(i < len(num_a_codificar)):
@@ -158,11 +164,6 @@ if __name__ == '__main__':
                     msj_final += to_char
                 print(msj_final)
                         
-                    
-                    
-
-
-
             if(bits_signif_bin == '0010'):#2
                 print("2")
 
