@@ -8,30 +8,31 @@ group = parser.add_mutually_exclusive_group()
 group.add_argument("--encode", action = "store_true", help = "indica que la tarea es codificar un texto de entrada dentro de una imagen.")
 group.add_argument("--decode", action = "store_true", help = "indica que la tarea es decodificar una imagen, mostrando el texto oculto.")
     
-parser.add_argument("--image", nargs = 1, type = str, help = "indica la imagen que sera codificada/decodificada.")
-parser.add_argument("--text", nargs = 1, type = str, help = "indica el archivo que contiene el texto a codificar.")
-parser.add_argument("--nbits", nargs = 1, type = int, choices = range(1,9), help = "indica el numero de bits menos significativos a ser usados.")
+parser.add_argument("--image", type = str, help = "indica la imagen que sera codificada/decodificada.")
+parser.add_argument("--text", type = str,  help = "indica el archivo que contiene el texto a codificar.", required = False)
+parser.add_argument("--nbits", type = int, help = "indica el numero de bits menos significativos a ser usados.", required = False)
 
 args = parser.parse_args()
 
-#python tarea_1.py --encode --image 'images/gray/castillo_gray.jpg' --text 'textos/texto1.txt' --nbits 2
-#python tarea_1.py --decode --image 'img_out/castillo_gray_out.jpg'
+#python tarea_1.py --encode --image 'images/gray/lenna_gray.png' --text 'textos/texto1.txt' --nbits 2
+#python tarea_1.py --decode --image 'img_out/lenna_gray_out.png'
 if __name__ == '__main__':
-    img_filename = args.image[0]
+    img_filename = args.image
     image = io.imread(img_filename)
-    print()
-    txt_filename = args.text[0]
-    text = open(txt_filename, 'r').read()
+    eof_fila = 0
+    eof_colm = 0
 
     #modo encode
     if args.encode:
+        txt_filename = args.text
+        text = open(txt_filename, 'r').read()
         #imagen en escala de grises
         if(len(image.shape) == 2):
             dimension = np.shape(image)
             filas = dimension[0]
             columnas = dimension[1]
             
-            if(8 % args.nbits[0] == 0):
+            if(8 % args.nbits == 0):
                 lst_txt = []
                 for l in text:
                     lst_txt.append(l)
@@ -56,11 +57,11 @@ if __name__ == '__main__':
                         bin_matrix[n][m] = "{0:{fill}8b}".format(image[n][m], fill='0')
 
                 #ahora debemos considerar los bits menos significativos que nos piden
-                bits_sigf = args.nbits[0]#se obtienen los bits significativos que se usaran
+                bits_sigf = args.nbits #se obtienen los bits significativos que se usaran
                 txt_bin_copy = txt_bin.copy()
                 txt_bin_copy.reverse()#el ultimo sera el primero
 
-                cortes = int(8/bits_sigf)
+                cortes = int(8/bits_sigf)#cantidad de divisiones del numero binario
 
                 lst_bits_codif = []
                 while(txt_bin_copy):
@@ -83,17 +84,20 @@ if __name__ == '__main__':
                     bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "0100"
                 if(bits_sigf == 8):
                     bin_matrix[filas - 1][columnas - 1] = str(bin_matrix[filas - 1][columnas - 1])[:-4] + "1000"
+
                 
                 i = 0
                 for n in range(filas):
-                    for m in range(columnas):
-                        if(i > len(lst_bits_codif) - 1):
+                    if(i > len(lst_bits_codif) - 1):
+                            n -= 1
                             break
+                    for m in range(columnas): 
                         if(i > len(lst_bits_codif) - 1):
                             break
                         bin_matrix[n][m] = str(bin_matrix[n][m])[: - bits_sigf] + lst_bits_codif[i]
                         i += 1
-
+                bin_matrix[n][m] = '11111110'    
+                
                 #ahora que tenemos la matriz binaria codificada debemos pasar sus valores a int para convertirla en imagen
                 for n in range(filas):
                     for m in range(columnas):
@@ -101,17 +105,8 @@ if __name__ == '__main__':
 
                 img = bin_matrix.copy()
                 img_numpy = np.array(img, dtype=np.uint8)
-
-                """ print("\nImagen Original: ")
-                print(image)
-                print("\n")
-                print("\nImagen Codificada: ")
-                print(img_numpy)           
-                print("\n") """
-
-                file = io.imsave("img_out/"+img_filename[11:-4]+"_out.png", img_numpy)
-                """ plt.imshow(img, cmap = 'gray')
-                plt.show() """
+                
+                file = io.imsave("img_out/" + img_filename[11:-4] + "_out.png", img_numpy)
 
             else:
                 print("La cantidad de bits significativos está limitada a solo ser divisores de 8, prueba con {1,2,4,8} lo siento :(")
@@ -121,16 +116,71 @@ if __name__ == '__main__':
 
     #modo decode
     if args.decode:
+        dimension = np.shape(image)
+        filas = dimension[0]
+        columnas = dimension[1]
+        
         #imagen en escala de grises
         if(len(image.shape) == 2):
-            continue
+            num_a_codificar=[]
+            #se extrae el numero de los bits menos significativos
+            bits_signif_bin = "{0:{fill}8b}".format(image[filas - 1][columnas - 1], fill='0')[4:]
+
+            for n in range(filas):
+                for m in range(columnas):
+                    if(image[n][m] == 254):
+                        break
+                    else:
+                        num_a_codificar.append(image[n][m])
+                break
+            print(num_a_codificar)
+
+            txt_codificado_bin =[]
+            if(bits_signif_bin == '0001'):#1
+
+                j = 0
+                i = 0
+                while(i < len(num_a_codificar)):
+                    A = ''
+                    while(j < 8 and i < len(num_a_codificar)):
+                        #print(i)
+                        letra_en_binario = "{0:{fill}8b}".format(num_a_codificar[i], fill='0')[-1:]
+                        A += letra_en_binario
+                        i += 1
+                        j += 1
+                    txt_codificado_bin.append(A)
+                    j = 0
+
+                msj_final = ''
+                for elem in txt_codificado_bin:
+                    caracter_num = int(elem, 2)
+                    to_char = chr(caracter_num)
+                    msj_final += to_char
+                print(msj_final)
+                        
+                    
+                    
+
+
+
+            if(bits_signif_bin == '0010'):#2
+                print("2")
+
+            if(bits_signif_bin == '0100'):#4
+                print("4")
+
+            if(bits_signif_bin == '1000'):#8
+                decode = ''
+                for elem in num_a_codificar:
+                    caracter = chr(elem)
+                    decode += caracter
+                print(decode)
+            
+
         #imagen a color
         elif(len(image.shape) == 3):
-            continue
-        print("deone")
-        """ if(bin_matrix[filas - 1][columnas - 1])
-        if()
-        if()
-        if() """
+            pass
+        
+        
 
         #bits_significativos = image[]
