@@ -10,12 +10,12 @@ group.add_argument("--decode", action = "store_true", help = "indica que la tare
     
 parser.add_argument("--image", type = str, help = "indica la imagen que sera codificada/decodificada.")
 parser.add_argument("--text", type = str,  help = "indica el archivo que contiene el texto a codificar.", required = False)
-parser.add_argument("--nbits", type = int, help = "indica el numero de bits menos significativos a ser usados.", required = False)
+parser.add_argument("--nbits", type = int, help = "indica el numero de bits menos significativos a ser usados.", required = False, choices = [1,2,4,8])
 
 args = parser.parse_args()
 
-#python tarea_1.py --encode --image 'images/gray/ten_coins.png' --text 'textos/texto1.txt' --nbits 1
-#python tarea_1.py --decode --image 'img_out/ten_coins_out.png'
+#python tarea_1.py --encode --image 'images/gray/lenna_gray.png' --text 'textos/texto1.txt' --nbits 1
+#python tarea_1.py --decode --image 'img_out/lenna_gray_out.png'
 if __name__ == '__main__':
     img_filename = args.image
     image = io.imread(img_filename)
@@ -106,7 +106,6 @@ if __name__ == '__main__':
 
                 img = bin_matrix.copy()
                 img_numpy = np.array(img, dtype=np.uint8)
-                
                 file = io.imsave("img_out/" + img_filename[11:-4] + "_out.png", img_numpy)
 
             else:
@@ -128,9 +127,9 @@ if __name__ == '__main__':
 
             #se extrae el numero de los bits menos significativos
             nbits = int("{0:{fill}8b}".format(image[filas - 1][columnas - 1], fill='0')[4:], 2)
-
             #nro de pixeles que se van a usar
             pixeles = image[filas - 2][columnas - 2]
+
             n_pix = 0
             for n in range(filas):
                 for m in range(columnas):
