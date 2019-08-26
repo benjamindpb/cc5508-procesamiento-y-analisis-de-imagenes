@@ -1,7 +1,6 @@
 import argparse
 from skimage import io
 import numpy as np
-import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description = "CC5508 - Procesamiento y Analisis de Imagenes.Tarea 1: Estenografía")
 group = parser.add_mutually_exclusive_group()
@@ -14,8 +13,6 @@ parser.add_argument("--nbits", type = int, help = "indica el numero de bits meno
 
 args = parser.parse_args()
 
-#python tarea_1.py --encode --image 'images/gray/lenna_gray.png' --text 'textos/texto1.txt' --nbits 1
-#python tarea_1.py --decode --image 'img_out/lenna_gray_out.png'
 if __name__ == '__main__':
     img_filename = args.image
     image = io.imread(img_filename)
@@ -171,7 +168,3 @@ if __name__ == '__main__':
         #imagen a color
         elif(len(image.shape) == 3):
             pass
-        
-        
-
-        #bits_significativos = image[]
