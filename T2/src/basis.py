@@ -98,7 +98,7 @@ def add_gaussian_noise(image, std):
     noisy_image = image + noise
     noisy_image[image < 0] = 0
     noisy_image[image > 255] = 255
-    return noisy_image.astype(np.uint8);
+    return noisy_image.astype(np.uint8)
 
 def get_borde(image, gx_kernel):    
     gy_kernel = np.transpose(gx_kernel)
