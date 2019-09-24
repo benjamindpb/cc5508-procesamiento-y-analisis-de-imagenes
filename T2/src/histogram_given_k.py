@@ -21,8 +21,7 @@ K: valor de cuantizacion
 def getHistogram(image_path, K):
     image = pai_io.imread(image_path, as_gray = True)
     print(image)
-    # hA = oh.compute_orientation_histogram(image, K)
-    # plt.bar(range(K), height = hA)
-    # plt.show()
+    hA = oh.compute_orientation_histogram(image, K)
+    plt.bar(range(K), height = hA)
+    plt.show()
 
-getHistogram(delfin, 36)
