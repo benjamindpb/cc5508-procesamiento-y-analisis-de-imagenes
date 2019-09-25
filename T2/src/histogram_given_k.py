@@ -22,7 +22,6 @@ K: valor de cuantizacion
 """
 
 def getHistogram(image, K):
-    #si el tipo de im
     if(type(image) == np.ndarray):
         hA = oh.compute_orientation_histogram(image, K)
         plt.bar(range(K), height = hA)
@@ -32,5 +31,3 @@ def getHistogram(image, K):
         hA = oh.compute_orientation_histogram(img, K)
         plt.bar(range(K), height = hA)
         plt.show()
-    
-#getHistogram(delfin2, 36)
