@@ -2,7 +2,7 @@ import scipy.ndimage.filters as nd_filters
 import numpy as np
 
 def compute_orientation_histogram(image, K):
-    h = np.zeros( K, np.float32)
+    h = np.zeros(K, np.float32)
     gx_mask = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], np.float32)
     gy_mask = np.transpose(gx_mask)
     gx = nd_filters.convolve(image.astype(np.float32), gx_mask)

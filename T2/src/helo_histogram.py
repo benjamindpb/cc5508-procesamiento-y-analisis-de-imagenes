@@ -47,9 +47,13 @@ def helo_histogram(image_path, B, K):
 
     for r in range(B):
         for s in range(B):
-            ang[r,s] = np.arctan2(L_y[r,s], L_x[r,s]) * 0.5
+            ang[r,s] = np.arctan2(L_y[r,s], L_x[r,s]) * 0.5 - np.pi * 0.5
 
     ho.getHistogram(ang, K)
+
+#def helo_lines(image, B, K):
+    
+#helo_histogram(delfin, 25, 36)
     
 
 
