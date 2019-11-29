@@ -9,6 +9,7 @@ if __name__== '__main__':
     gray1= cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     gray2= cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
 
+#####################################################SIFT#######################################################
     #creacion de un objeto de tipo SIFT
     sift = cv2.xfeatures2d.SIFT_create()
 
@@ -21,7 +22,8 @@ if __name__== '__main__':
     #imagenes con los keypoints y sus respectivas orientaciones
     img_whit_kp1 = cv2.drawKeypoints(gray1,kp1, img1, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     img_whit_kp2 = cv2.drawKeypoints(gray2,kp2, img2, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    
+
+####################################################MATCHING####################################################  
     #Match de descriptores de puntos de interes
     bf = cv2.BFMatcher()
     matches = bf.match(des1,des2)
@@ -30,26 +32,19 @@ if __name__== '__main__':
     n_kp = len(matches)
     #para tener una buena muestra, y que no aparezcan todos los kp
     N = int(n_kp * 0.25)
+    matching = cv2.drawMatches(gray1, kp1, gray2, kp2, matches[:N], None, flags=2)
 
+#####################################################RANSAC#####################################################
     #Como nuestro conjunto de KP son del tipo DMatch los transformamos a coordenadas
     #(x, y) para que sea mas facil rabajar (?)
-
     list_kp1 = []
     list_kp2 = []
-
     for mat in matches:
-
-        # Get the matching keypoints for each of the images
         img1_idx = mat.queryIdx
         img2_idx = mat.trainIdx
-
-        # x - columnas
-        # y - filas
         # Obtenemos las coordenadas, en forma de tuplas
         (x1,y1) = kp1[img1_idx].pt
         (x2,y2) = kp2[img2_idx].pt
-
-        # Agregamos las coordenadas a nuestras listas
         list_kp1.append((x1, y1))
         list_kp2.append((x2, y2))
 
@@ -62,9 +57,9 @@ if __name__== '__main__':
     for i in list_kp2:
         integer_kp2.append((int(i[0]), int(i[1])))
 
-    asd = cv2.line(gray2, integer_kp2[4], integer_kp2[49], (255, 0, 0), 3)
+    asd = cv2.line(gray2, integer_kp2[100], integer_kp2[33], (255, 0, 0), 3)
 
-    matching = cv2.drawMatches(gray1, kp1, gray2, kp2, matches[:N], None, flags=2)
+    
 
     #Se guardan las imagenes de salida
     cv2.imwrite("../img_out/sift_kp1.png", img_whit_kp1)
