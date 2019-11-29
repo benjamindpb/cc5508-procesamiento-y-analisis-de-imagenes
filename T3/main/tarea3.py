@@ -59,8 +59,6 @@ if __name__== '__main__':
 
     asd = cv2.line(gray2, integer_kp2[100], integer_kp2[33], (255, 0, 0), 3)
 
-    
-
     #Se guardan las imagenes de salida
     cv2.imwrite("../img_out/sift_kp1.png", img_whit_kp1)
     cv2.imwrite("../img_out/sift_kp2.png", img_whit_kp2)
