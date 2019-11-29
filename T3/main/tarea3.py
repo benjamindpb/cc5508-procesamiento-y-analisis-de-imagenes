@@ -29,13 +29,48 @@ if __name__== '__main__':
     matches = sorted(matches, key = lambda x:x.distance)
     n_kp = len(matches)
     #para tener una buena muestra, y que no aparezcan todos los kp
-    N = int(n_kp * 0.25) 
+    N = int(n_kp * 0.25)
+
+    #Como nuestro conjunto de KP son del tipo DMatch los transformamos a coordenadas
+    #(x, y) para que sea mas facil rabajar (?)
+
+    list_kp1 = []
+    list_kp2 = []
+
+    for mat in matches:
+
+        # Get the matching keypoints for each of the images
+        img1_idx = mat.queryIdx
+        img2_idx = mat.trainIdx
+
+        # x - columnas
+        # y - filas
+        # Obtenemos las coordenadas, en forma de tuplas
+        (x1,y1) = kp1[img1_idx].pt
+        (x2,y2) = kp2[img2_idx].pt
+
+        # Agregamos las coordenadas a nuestras listas
+        list_kp1.append((x1, y1))
+        list_kp2.append((x2, y2))
+
+    #se convierten las tuplas a numeros enteros para evitar problemas futuros e_e
+    integer_kp1 = []
+    for i in list_kp1:
+        integer_kp1.append((int(i[0]), int(i[1])))
+
+    integer_kp2 = []
+    for i in list_kp2:
+        integer_kp2.append((int(i[0]), int(i[1])))
+
+    asd = cv2.line(gray2, integer_kp2[4], integer_kp2[49], (255, 0, 0), 3)
+
     matching = cv2.drawMatches(gray1, kp1, gray2, kp2, matches[:N], None, flags=2)
 
     #Se guardan las imagenes de salida
-    cv2.imwrite("../img_out/sift_kp1.jpg", img_whit_kp1)
-    cv2.imwrite("../img_out/sift_kp2.jpg", img_whit_kp2)
+    cv2.imwrite("../img_out/sift_kp1.png", img_whit_kp1)
+    cv2.imwrite("../img_out/sift_kp2.png", img_whit_kp2)
     cv2.imwrite("../img_out/matching.png", matching)
+    cv2.imwrite("../img_out/line.png", asd)
 
     
 
