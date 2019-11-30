@@ -16,8 +16,6 @@ if __name__== '__main__':
     #Detects keypoints and computes the descriptors
     kp1, des1 = sift.detectAndCompute(img1,None)
     kp2, des2 = sift.detectAndCompute(img2,None)
-
-    pts = np.array(cv2.KeyPoint_convert(kp1))
     
     #imagenes con los keypoints y sus respectivas orientaciones
     img_whit_kp1 = cv2.drawKeypoints(gray1,kp1, img1, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
@@ -57,13 +55,13 @@ if __name__== '__main__':
     for i in list_kp2:
         integer_kp2.append((int(i[0]), int(i[1])))
 
-    asd = cv2.line(gray2, integer_kp2[100], integer_kp2[33], (255, 0, 0), 3)
+    line = cv2.line(gray2, integer_kp2[32], integer_kp2[124], (255, 0, 0), 3)
 
     #Se guardan las imagenes de salida
     cv2.imwrite("../img_out/sift_kp1.png", img_whit_kp1)
     cv2.imwrite("../img_out/sift_kp2.png", img_whit_kp2)
     cv2.imwrite("../img_out/matching.png", matching)
-    cv2.imwrite("../img_out/line.png", asd)
+    cv2.imwrite("../img_out/line.png", line)
 
     
 
