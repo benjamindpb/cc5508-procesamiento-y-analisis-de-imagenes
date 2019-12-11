@@ -3,8 +3,8 @@ import numpy as np
 
 if __name__== '__main__':
     
-    img1 = cv2.imread('../img/caso_1/1a.jpg')
-    img2 = cv2.imread('../img/caso_1/1b.jpg')
+    img1 = cv2.imread('../img/caso_3/3a.jpg')
+    img2 = cv2.imread('../img/caso_3/3b.jpg')
 
     gray1= cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     gray2= cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
@@ -58,10 +58,9 @@ if __name__== '__main__':
     line = cv2.line(gray2, integer_kp2[32], integer_kp2[124], (255, 0, 0), 3)
 
     #Se guardan las imagenes de salida
-    cv2.imwrite("../img_out/sift_kp1.png", img_whit_kp1)
-    cv2.imwrite("../img_out/sift_kp2.png", img_whit_kp2)
-    cv2.imwrite("../img_out/matching.png", matching)
-    cv2.imwrite("../img_out/line.png", line)
+    cv2.imwrite("../img_out/sift_kp1_caso_3.png", img_whit_kp1)
+    cv2.imwrite("../img_out/sift_kp2_caso_3.png", img_whit_kp2)
+    cv2.imwrite("../img_out/matching_caso_3.png", matching)
 
     
 
