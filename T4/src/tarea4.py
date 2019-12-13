@@ -1,14 +1,32 @@
 import matplotlib.pyplot as plt
+import numpy as np
+import glob
 import pai_io
 import basis
 import cv2
 
 #imgOrigen, imgDestino, archivoLineas, N
 def morph(rutaImgOrigen, rutaImgDestino, rutaArchivoLineas, N):
+    images = []
     #imagen origen
     imgOrigen = pai_io.imread(rutaImgOrigen)
+    print(imgOrigen.shape)
     #imagen destino
     imgDestino = pai_io.imread(rutaImgDestino)
+    print(imgDestino.shape)
+
+    images.append(imgOrigen)
+    images.append(imgDestino)
+
+    alto, ancho , capas = images.shape
+    size = (ancho, alto)
+
+    out = cv2.VideoWriter("morphing.avi", cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+    for i in range(len(images)):
+        out.write(images[i])
+    out.release()
+
 ########################################################################
     # plt.figure()
 
@@ -25,14 +43,8 @@ def morph(rutaImgOrigen, rutaImgDestino, rutaArchivoLineas, N):
     # plt.show()
     #hola()
 ########################################################################
-        #ruta del archivo que contiene los pares de lineas de ref
-    """
-    Cada linea del archivo de texto indica un par de lineas de ref con
-    respecto a la imgOriginal y la imgDestino, respectivamente.
-    Para la i-esima linea, los primeros 4 valores que siguen a "i:"
-    indican el punto inicio y fin de la linea en la imgOriginal y los 
-    cuatro ultimos especifican la linea en la imgDestino
-    """
+
+    #ruta del archivo que contiene los pares de lineas de ref
     rutaArchivoDeLineas = "../txt/refLines.txt"
     archivoDeLineas  = open(rutaArchivoDeLineas, 'r')
     lineas = archivoDeLineas.read().splitlines()
