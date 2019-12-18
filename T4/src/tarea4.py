@@ -57,12 +57,36 @@ def morph(rutaImgOrigen, rutaImgDestino, rutaArchivoLineas, N):
     #hola()
 ########################################################################
     
-    for i in range(largo):
-        for j in range(ancho):
-            
+def transform(x_i, x_j, arrayPuntos):
+    x = np.array([x_i, x_j])
+    pa, qa, pb, qb = arrayPuntos
+    
+    px = x - pa
+    pq_a = qa - pa
+    pq_b = qb - pb
+
+    pq_a_norm = np.linalg.norm(pq_a)
+    pq_b_norm = np.linalg.norm(pq_b)
+
+    u_a = pq_a / pq_a_norm
+    v_a = np.array([-u_a[1], u_a[0]])
+    u_b = pq_b / pq_b_norm
+    v_b = np.array([-u_b[1], u_b[0]])
+
+    a = u_a @ px
+    b = v_a @ px
+    C = ((pq_b_norm * a * u_b) / pq_a_norm)
+    D = (b * v_b)
+
+    X = pb + C + D
+    return X
+
+
+    print("hola")
     
 
 if __name__ == "__main__":
-    morph("../img/pinochet_face.jpg", "../img/hitler_face.jpg", "txt/refLines.txt", 4)
-    
+    #morph("../img/pinochet_face.jpg", "../img/hitler_face.jpg", "txt/refLines.txt", 4)
+    A = transform(4,5,np.array([[2, 2], [2, 6], [3, 3], [7, 7]]))
+    print(A)
 
